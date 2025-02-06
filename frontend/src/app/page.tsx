@@ -100,17 +100,16 @@ export default function LandingPage() {
               <div className="space-y-2">
                 <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Ready to Get Started?</h2>
                 <p className="mx-auto max-w-[600px] text-gray-500 md:text-xl dark:text-gray-400">
-                  Sign up for a free trial or contact us for more information.
+                  Contact us for more information.
                 </p>
               </div>
               <div className="w-full max-w-sm space-y-2">
-                <form className="flex space-x-2">
+                <div className="flex space-x-2">
                   <Input className="max-w-lg flex-1" placeholder="Enter your email" type="email" />
-                  <Button type="submit">Subscribe</Button>
-                </form>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  By subscribing, you agree to our Terms & Conditions.
-                </p>
+                  <Button>
+                    <Link href="/signup">Sign Up</Link>
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
