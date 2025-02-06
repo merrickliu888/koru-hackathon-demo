@@ -32,7 +32,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
                 Login
               </Button>
               <Button variant="outline" className="w-full">
-                Login with Google
+                Login with Microsoft
               </Button>
             </div>
             <div className="mt-4 text-center text-sm">
