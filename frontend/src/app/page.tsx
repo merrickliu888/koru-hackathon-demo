@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { UserPlus, Search, CalendarCheck } from "lucide-react";
 import { LandingPageHeader } from "@/components/landing-page-header";
-
+import GenerateButton from "@/components/GenerateButton";
 export default function LandingPage() {
   return (
     <div className="flex flex-col min-h-[100dvh]">
@@ -22,7 +22,8 @@ export default function LandingPage() {
                 </p>
               </div>
               <div className="space-x-4">
-                <Button>Get Started</Button>
+                <GenerateButton />
+                {/* <Button>Get Started</Button> */}
                 <Button variant="outline">Learn More</Button>
               </div>
             </div>
