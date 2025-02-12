@@ -1,3 +1,5 @@
+import SubstituteTeacherSearch from "@/components/substitute-teachers-search";
+
 export default function SearchSupplyTeachers() {
-  return <div>Search Supply Teachers</div>;
+  return <SubstituteTeacherSearch />;
 }

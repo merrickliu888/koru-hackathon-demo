@@ -7,7 +7,7 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
 } from "@/components/ui/sidebar";
-import { LucideIcon, Settings, School } from "lucide-react";
+import { LucideIcon, Settings, Bolt } from "lucide-react";
 
 interface SidebarProps {
   tabs: {
@@ -21,7 +21,11 @@ export function AppSidebar({ tabs }: SidebarProps) {
   return (
     <Sidebar>
       <SidebarContent>
-        <SidebarHeader className="font-bold ml-3">Relay</SidebarHeader>
+        <SidebarHeader className="font-bold text-2xl ml-3">
+          <div className="flex items-center gap-2">
+            <Bolt /> Relay
+          </div>
+        </SidebarHeader>
         <SidebarMenu>
           {tabs.map((tab) => (
             <SidebarMenuItem className="ml-3" key={tab.label}>
