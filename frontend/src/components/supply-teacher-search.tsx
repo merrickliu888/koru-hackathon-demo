@@ -39,7 +39,7 @@ const dummyTeachers = [
   { id: 5, name: "Charlie Davis", subject: "Art", grade: "Elementary", available: false, experience: "2 years" },
 ];
 
-export default function SubstituteTeacherSearch() {
+export default function SupplyTeacherSearch() {
   const [searchQuery, setSearchQuery] = useState("");
   const [teacherName, setTeacherName] = useState("");
   const [selectedSubject, setSelectedSubject] = useState("");
@@ -72,7 +72,7 @@ export default function SubstituteTeacherSearch() {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Substitute Teacher Search</h1>
+      <h1 className="text-2xl font-bold mb-4">Supply Teacher Search</h1>
       <div className="grid gap-4 mb-6">
         <div className="flex gap-4 items-end">
           <div className="flex-1">
