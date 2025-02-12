@@ -66,18 +66,25 @@ export default function SubstituteTeacherSearch() {
     console.log(`Requesting teacher with ID: ${teacherId}`);
   };
 
+  const handleSearch = () => {
+    console.log("Searching for teachers...");
+  };
+
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Substitute Teacher Search</h1>
       <div className="grid gap-4 mb-6">
-        <div>
-          <Label htmlFor="search">Search</Label>
-          <Input
-            id="search"
-            placeholder="I am looking for a teacher for..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
+        <div className="flex gap-4 items-end">
+          <div className="flex-1">
+            <Label htmlFor="search">Search</Label>
+            <Input
+              id="search"
+              placeholder="I am looking for a teacher for..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+          <Button onClick={handleSearch}>Search</Button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
           <div>
