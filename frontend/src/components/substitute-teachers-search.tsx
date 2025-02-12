@@ -7,14 +7,16 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "./ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-
-interface Teacher {
-  id: number;
-  name: string;
-  subject: string;
-  grade: string;
-  available: boolean;
-}
+import { CalendarIcon } from "lucide-react";
+import { format } from "date-fns";
+import { Calendar } from "@/components/ui/calendar";
+// interface Teacher {
+//   id: number;
+//   name: string;
+//   subject: string;
+//   grade: string;
+//   available: boolean;
+// }
 
 const subjects = [
   "Mathematics",
@@ -43,7 +45,8 @@ export default function SubstituteTeacherSearch() {
   const [selectedSubject, setSelectedSubject] = useState("");
   const [selectedGrade, setSelectedGrade] = useState("");
   const [showOnlyAvailable, setShowOnlyAvailable] = useState(false);
-  const [requestedTeachers, setRequestedTeachers] = useState<Set<Teacher>>(new Set());
+  const [requestedTeachers, setRequestedTeachers] = useState<Set<number>>(new Set());
+  const [date, setDate] = useState<Date>();
 
   const filteredTeachers = dummyTeachers.filter((teacher) => {
     return (
@@ -76,7 +79,24 @@ export default function SubstituteTeacherSearch() {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+          <div>
+            <Label>Date</Label>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant={"outline"}
+                  className={`w-full justify-start text-left font-normal ${!date && "text-muted-foreground"}`}
+                >
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {date ? format(date, "PPP") : <span>Pick a date</span>}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0">
+                <Calendar mode="single" selected={date} onSelect={setDate} initialFocus />
+              </PopoverContent>
+            </Popover>
+          </div>
           <div>
             <Label htmlFor="name">Name</Label>
             <Input
@@ -213,7 +233,7 @@ export default function SubstituteTeacherSearch() {
                     variant="outline"
                     size="sm"
                     onClick={() => handleRequest(teacher.id)}
-                    disabled={requestedTeachers.has(teacher.id)}
+                    disabled={!date || requestedTeachers.has(teacher.id)}
                     className={requestedTeachers.has(teacher.id) ? "bg-gray-200 text-gray-600 w-20" : "w-20"}
                   >
                     {requestedTeachers.has(teacher.id) ? "Requested" : "Request"}
