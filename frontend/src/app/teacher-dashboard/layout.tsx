@@ -1,7 +1,9 @@
 import { AppSidebar } from "@/components/sidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { BookOpen, Search, Upload } from "lucide-react";
+import { BookOpen, Home, Search, Upload } from "lucide-react";
+
 const tabs = [
+  { label: "Dashboard", href: "/teacher-dashboard", icon: Home },
   { label: "Search Supply Teachers", href: "/teacher-dashboard/search-supply-teachers", icon: Search },
   { label: "Generate Lesson Plan", href: "/teacher-dashboard/generate-lesson-plan", icon: BookOpen },
   { label: "Upload Docs", href: "/teacher-dashboard/upload-docs", icon: Upload },
