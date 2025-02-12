@@ -4,8 +4,12 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-fastapi = {extras = ["standard"], version = "*"}
+fastapi = "*"
+uvicorn = "*"
 cohere = "*"
+python-dotenv = "*"
+pydantic = "*"
+pydantic-settings = "*"
 
 [dev-packages]
 
