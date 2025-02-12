@@ -3,7 +3,7 @@ from starlette.middleware.cors import CORSMiddleware
 from fastapi import Request, Depends, UploadFile
 from google import genai
 from cohere import ClientV2 as CohereClient
-from clients import inject_google_genai_client, inject_cohere_client, inject_supabase_client, SupabaseClient
+from clients import inject_google_genai_client, inject_cohere_client
 from llm import process_images, generate_form
 
 app = fastapi.FastAPI()
