@@ -8,6 +8,14 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "./ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 
+interface Teacher {
+  id: number;
+  name: string;
+  subject: string;
+  grade: string;
+  available: boolean;
+}
+
 const subjects = [
   "Mathematics",
   "Science",
@@ -35,7 +43,7 @@ export default function SubstituteTeacherSearch() {
   const [selectedSubject, setSelectedSubject] = useState("");
   const [selectedGrade, setSelectedGrade] = useState("");
   const [showOnlyAvailable, setShowOnlyAvailable] = useState(false);
-  const [requestedTeachers, setRequestedTeachers] = useState<Set<any>>(new Set());
+  const [requestedTeachers, setRequestedTeachers] = useState<Set<Teacher>>(new Set());
 
   const filteredTeachers = dummyTeachers.filter((teacher) => {
     return (
