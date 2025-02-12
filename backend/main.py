@@ -1,8 +1,10 @@
 import fastapi
 from starlette.middleware.cors import CORSMiddleware
-from config import settings
-import cohere
-from pydantic import BaseModel
+from fastapi import Request, Depends, UploadFile
+from google import genai
+from cohere import ClientV2 as CohereClient
+from clients import inject_google_genai_client, inject_cohere_client
+from llm import process_images, generate_form
 
 app = fastapi.FastAPI()
 
@@ -14,24 +16,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-class PromptRequest(BaseModel):
-    prompt: str
-
-@app.get("/")
-def read_root():
-    return {"message": "Hello, FastAPI!"}
-
-@app.post("/generate")
-def generate(request: PromptRequest):
-    co = cohere.ClientV2(settings.COHERE_API_KEY)
-    response = co.chat(
-        model="command-r-plus",
-        messages=[
-            {
-                "role": "user",
-                "content": request.prompt
-            }
-        ]
-    )
-    
-    return {"message": response.message.content[0].text}
+@app.post("generate-lesson-plan")
+async def generate_lesson_plan(request: Request, 
+                               files: list[UploadFile] | None, 
+                               gemini_client: genai.Client = Depends(inject_google_genai_client), 
+                               cohere_client: CohereClient = Depends(inject_cohere_client)):
+    body = await request.json()
+    if files:
+        processed_images = await process_images(gemini_client, files)
+    else:
+        processed_images = []
+    form = await generate_form(cohere_client, body.context, processed_images)
+    return {"form": form}

@@ -10,6 +10,11 @@ cohere = "*"
 python-dotenv = "*"
 pydantic = "*"
 pydantic-settings = "*"
+supabase = "*"
+google-genai = "*"
+pillow = "*"
+pypdf = "*"
+pdf2image = "*"
 
 [dev-packages]
 
