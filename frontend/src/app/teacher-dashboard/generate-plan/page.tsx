@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Upload, Plus, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 interface Deliverable {
   id: string;
@@ -520,6 +521,27 @@ export default function LessonPlan() {
                 </Label>
                 <Textarea id="other-notes" placeholder="Add any other notes here..." className="mt-1" rows={3} />
               </div>
+              <div>
+                <Label htmlFor="other-notes" className="text-lg font-bold">
+                  Important Information
+                </Label>
+                <div className="mt-2">
+                  <h4 className="font-medium">Allergies:</h4>
+                  <ul className="list-disc list-inside">
+                    <li>Alex Huh: Peanut Allergy, Gluten Intolerance</li>
+                    <li>John Doe: Dairy Allergy</li>
+                    <li>Jane Smith: Egg Allergy</li>
+                  </ul>
+                </div>
+                <div className="mt-2">
+                  <h4 className="font-medium">Emergency Plans:</h4>
+                  <ul className="list-disc list-inside">
+                    <li>In case of fire, evacuate to the nearest exit and gather at the designated meeting point.</li>
+                    <li>For medical emergencies, call the school nurse and provide first aid if trained.</li>
+                    <li>In case of severe weather, move to the interior rooms away from windows.</li>
+                  </ul>
+                </div>
+              </div>
             </div>
 
             <div>
@@ -547,19 +569,21 @@ export default function LessonPlan() {
         <div className="space-y-6">
           <Card className="shadow-lg pb-4">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-xl">Your Selected Supply Teacher</CardTitle>
+              <CardTitle className="flex items-center gap-2 text-xl">Supply Teacher</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center space-x-4">
                 <div className="relative h-24 w-24 border-2 border-gray-400 rounded-full">
-                  <img
+                  <Image
                     src="/placeholder-avatar.png"
                     alt="Supply Teacher"
                     className="rounded-full object-cover w-full h-full"
+                    width={100}
+                    height={100}
                   />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg">Sarah Johnson</h3>
+                  <h3 className="font-semibold text-lg">Sam Johnson</h3>
                   <p className="text-sm text-muted-foreground">Available Today</p>
                 </div>
               </div>
@@ -568,7 +592,7 @@ export default function LessonPlan() {
                 <div>
                   <h4 className="font-medium text-sm text-muted-foreground">Contact Information</h4>
                   <p className="text-sm">+1 (555) 123-4567</p>
-                  <p className="text-sm">sarah.johnson@email.com</p>
+                  <p className="text-sm">sam.johnson@email.com</p>
                 </div>
 
                 <div>
