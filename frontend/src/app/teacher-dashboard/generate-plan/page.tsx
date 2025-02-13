@@ -274,37 +274,25 @@ export default function LessonPlan() {
                   <Label htmlFor="date" className="text-lg font-bold">
                     Date
                   </Label>
-                  <Input
-                    id="date"
-                    type="date"
-                    className="mt-1"
-                    value={formData.date}
-                    onChange={(e) => handleFormChange("date", e.target.value)}
-                  />
+                  <Input id="date" className="mt-1" value="March 24, 2024" />
                 </div>
                 <div>
                   <Label htmlFor="grade" className="text-lg font-bold">
                     Grade
                   </Label>
-                  <Input
-                    id="grade"
-                    placeholder="e.g. Grade 5"
-                    className="mt-1"
-                    value={formData.grade}
-                    onChange={(e) => handleFormChange("grade", e.target.value)}
-                  />
+                  <Input id="grade" value="Grade 5" className="mt-1" />
                 </div>
                 <div>
                   <Label htmlFor="teacher" className="text-lg font-bold">
                     Teacher
                   </Label>
-                  <Input id="teacher" placeholder="Teacher's name" className="mt-1" disabled />
+                  <Input id="teacher" value="Jane Lekhi" className="mt-1" />
                 </div>
                 <div>
                   <Label htmlFor="room" className="text-lg font-bold">
                     Room
                   </Label>
-                  <Input id="room" placeholder="Room number" className="mt-1" disabled />
+                  <Input id="room" value="MP 101" className="mt-1" />
                 </div>
               </div>
 
