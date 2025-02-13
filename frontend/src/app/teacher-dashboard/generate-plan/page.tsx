@@ -274,25 +274,25 @@ export default function LessonPlan() {
                   <Label htmlFor="date" className="text-lg font-bold">
                     Date
                   </Label>
-                  <Input id="date" className="mt-1" value="March 24, 2024" />
+                  <Input id="date" className="mt-1" value="March 24, 2024" readOnly />
                 </div>
                 <div>
                   <Label htmlFor="grade" className="text-lg font-bold">
                     Grade
                   </Label>
-                  <Input id="grade" value="Grade 5" className="mt-1" />
+                  <Input id="grade" value="Grade 5" className="mt-1" readOnly />
                 </div>
                 <div>
                   <Label htmlFor="teacher" className="text-lg font-bold">
                     Teacher
                   </Label>
-                  <Input id="teacher" value="Jane Lekhi" className="mt-1" />
+                  <Input id="teacher" value="Jane Lekhi" className="mt-1" readOnly />
                 </div>
                 <div>
                   <Label htmlFor="room" className="text-lg font-bold">
                     Room
                   </Label>
-                  <Input id="room" value="MP 101" className="mt-1" />
+                  <Input id="room" value="MP 101" className="mt-1" readOnly />
                 </div>
               </div>
 
