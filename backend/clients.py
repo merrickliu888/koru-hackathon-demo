@@ -1,6 +1,6 @@
 from supabase import acreate_client, AsyncClient as SupabaseClient
 from google import genai
-from cohere import ClientV2 as CohereClient
+from cohere import AsyncClientV2 as CohereClient
 import os
 from dotenv import load_dotenv
 

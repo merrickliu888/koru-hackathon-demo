@@ -34,6 +34,6 @@ async def generate_form(cohere_client: CohereClient, teacher_context: str, proce
         },
         temperature=0.2,
     )
-    return response.text
+    return response.message.content[0].text
 
 
