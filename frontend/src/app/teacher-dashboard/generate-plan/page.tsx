@@ -15,11 +15,53 @@ interface Deliverable {
   checked: boolean;
 }
 
+interface LessonPlanForm {
+  date: string;
+  grade: string;
+  teacher: string;
+  room: string;
+  morningRoutine: string;
+  periods: {
+    [key: string]: {
+      subject: string;
+      topic: string;
+      details: string;
+    };
+  };
+  recess1: string;
+  lunch: string;
+  recess2: string;
+  otherNotes: string;
+  additionalInformation: string;
+}
+
 export default function LessonPlan() {
   const [files, setFiles] = useState<File[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [deliverables, setDeliverables] = useState<Deliverable[]>([]);
   const [newDeliverable, setNewDeliverable] = useState("");
+  const [formData, setFormData] = useState<LessonPlanForm>({
+    date: "",
+    grade: "",
+    teacher: "",
+    room: "",
+    morningRoutine: "",
+    periods: {
+      period1: { subject: "Reading", topic: "", details: "" },
+      period2: { subject: "English", topic: "", details: "" },
+      period3: { subject: "Music", topic: "", details: "" },
+      period4: { subject: "Math", topic: "", details: "" },
+      period5: { subject: "Art", topic: "", details: "" },
+      period6: { subject: "French", topic: "", details: "" },
+      period7: { subject: "Art", topic: "", details: "" },
+      period8: { subject: "Art", topic: "", details: "" },
+    },
+    recess1: "",
+    lunch: "",
+    recess2: "",
+    otherNotes: "",
+    additionalInformation: "",
+  });
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -70,6 +112,34 @@ export default function LessonPlan() {
 
   const removeFile = (fileToRemove: File) => {
     setFiles(files.filter((file) => file !== fileToRemove));
+  };
+
+  const handleFormChange = (
+    field: keyof LessonPlanForm | { period: string; field: "topic" | "details" },
+    value: string
+  ) => {
+    if (typeof field === "string") {
+      setFormData((prev) => ({
+        ...prev,
+        [field]: value,
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        periods: {
+          ...prev.periods,
+          [field.period]: {
+            ...prev.periods[field.period],
+            [field.field]: value,
+          },
+        },
+      }));
+    }
+  };
+
+  const handleGeneratePlan = () => {
+    console.log("Generating lesson plan with data:", formData);
+    // Add your API call or generation logic here
   };
 
   return (
@@ -146,13 +216,25 @@ export default function LessonPlan() {
                   <Label htmlFor="date" className="text-lg font-bold">
                     Date
                   </Label>
-                  <Input id="date" type="date" className="mt-1" disabled />
+                  <Input
+                    id="date"
+                    type="date"
+                    className="mt-1"
+                    value={formData.date}
+                    onChange={(e) => handleFormChange("date", e.target.value)}
+                  />
                 </div>
                 <div>
                   <Label htmlFor="grade" className="text-lg font-bold">
                     Grade
                   </Label>
-                  <Input id="grade" placeholder="e.g. Grade 5" className="mt-1" disabled />
+                  <Input
+                    id="grade"
+                    placeholder="e.g. Grade 5"
+                    className="mt-1"
+                    value={formData.grade}
+                    onChange={(e) => handleFormChange("grade", e.target.value)}
+                  />
                 </div>
                 <div>
                   <Label htmlFor="teacher" className="text-lg font-bold">
@@ -177,6 +259,8 @@ export default function LessonPlan() {
                   placeholder="Describe the morning routine..."
                   className="mt-1"
                   rows={3}
+                  value={formData.morningRoutine}
+                  onChange={(e) => handleFormChange("morningRoutine", e.target.value)}
                 />
               </div>
 
@@ -186,16 +270,40 @@ export default function LessonPlan() {
                     Period 1 (8:45 – 9:15)
                   </Label>
                   <Input id="period-1" placeholder="Reading" className="mt-1" disabled />
-                  <Input id="period-1-topic" placeholder="e.g. Fractions" className="mt-1" />
-                  <Textarea placeholder="Lesson details..." className="mt-1" rows={2} />
+                  <Input
+                    id="period-1-topic"
+                    placeholder="e.g. Fractions"
+                    className="mt-1"
+                    value={formData.periods.period1.topic}
+                    onChange={(e) => handleFormChange({ period: "period1", field: "topic" }, e.target.value)}
+                  />
+                  <Textarea
+                    placeholder="Lesson details..."
+                    className="mt-1"
+                    rows={2}
+                    value={formData.periods.period1.details}
+                    onChange={(e) => handleFormChange({ period: "period1", field: "details" }, e.target.value)}
+                  />
                 </div>
                 <div>
                   <Label htmlFor="period-2" className="text-lg font-bold">
                     Period 2 (9:15 – 9:55)
                   </Label>
                   <Input id="period-2" placeholder="English" className="mt-1" disabled />
-                  <Input id="period-2-topic" placeholder="e.g. Fractions" className="mt-1" />
-                  <Textarea placeholder="Lesson details..." className="mt-1" rows={2} />
+                  <Input
+                    id="period-2-topic"
+                    placeholder="e.g. Fractions"
+                    className="mt-1"
+                    value={formData.periods.period2.topic}
+                    onChange={(e) => handleFormChange({ period: "period2", field: "topic" }, e.target.value)}
+                  />
+                  <Textarea
+                    placeholder="Lesson details..."
+                    className="mt-1"
+                    rows={2}
+                    value={formData.periods.period2.details}
+                    onChange={(e) => handleFormChange({ period: "period2", field: "details" }, e.target.value)}
+                  />
                 </div>
               </div>
 
@@ -212,16 +320,40 @@ export default function LessonPlan() {
                     Period 3 (10:10 – 10:50)
                   </Label>
                   <Input id="period-3" placeholder="Music" className="mt-1" disabled />
-                  <Input id="period-3-topic" placeholder="e.g. Fractions" className="mt-1" />
-                  <Textarea placeholder="Lesson details..." className="mt-1" rows={2} />
+                  <Input
+                    id="period-3-topic"
+                    placeholder="e.g. Fractions"
+                    className="mt-1"
+                    value={formData.periods.period3.topic}
+                    onChange={(e) => handleFormChange({ period: "period3", field: "topic" }, e.target.value)}
+                  />
+                  <Textarea
+                    placeholder="Lesson details..."
+                    className="mt-1"
+                    rows={2}
+                    value={formData.periods.period3.details}
+                    onChange={(e) => handleFormChange({ period: "period3", field: "details" }, e.target.value)}
+                  />
                 </div>
                 <div>
                   <Label htmlFor="period-4" className="text-lg font-bold">
                     Period 4 (10:50 – 11:30)
                   </Label>
                   <Input id="period-4" placeholder="Math" className="mt-1" disabled />
-                  <Input id="period-4-topic" placeholder="e.g. Fractions" className="mt-1" />
-                  <Textarea placeholder="Lesson details..." className="mt-1" rows={2} />
+                  <Input
+                    id="period-4-topic"
+                    placeholder="e.g. Fractions"
+                    className="mt-1"
+                    value={formData.periods.period4.topic}
+                    onChange={(e) => handleFormChange({ period: "period4", field: "topic" }, e.target.value)}
+                  />
+                  <Textarea
+                    placeholder="Lesson details..."
+                    className="mt-1"
+                    rows={2}
+                    value={formData.periods.period4.details}
+                    onChange={(e) => handleFormChange({ period: "period4", field: "details" }, e.target.value)}
+                  />
                 </div>
               </div>
 
@@ -238,16 +370,40 @@ export default function LessonPlan() {
                     Period 5 (12:35 – 1:15)
                   </Label>
                   <Input id="period-5" placeholder="Art" className="mt-1" disabled />
-                  <Input id="period-5-topic" placeholder="e.g. Fractions" className="mt-1" />
-                  <Textarea placeholder="Lesson details..." className="mt-1" rows={2} />
+                  <Input
+                    id="period-5-topic"
+                    placeholder="e.g. Fractions"
+                    className="mt-1"
+                    value={formData.periods.period5.topic}
+                    onChange={(e) => handleFormChange({ period: "period5", field: "topic" }, e.target.value)}
+                  />
+                  <Textarea
+                    placeholder="Lesson details..."
+                    className="mt-1"
+                    rows={2}
+                    value={formData.periods.period5.details}
+                    onChange={(e) => handleFormChange({ period: "period5", field: "details" }, e.target.value)}
+                  />
                 </div>
                 <div>
                   <Label htmlFor="period-6" className="text-lg font-bold">
                     Period 6 (1:15 – 1:55)
                   </Label>
                   <Input id="period-6" placeholder="French" className="mt-1" disabled />
-                  <Input id="period-6-topic" placeholder="e.g. Fractions" className="mt-1" />
-                  <Textarea placeholder="Lesson details..." className="mt-1" rows={2} />
+                  <Input
+                    id="period-6-topic"
+                    placeholder="e.g. Fractions"
+                    className="mt-1"
+                    value={formData.periods.period6.topic}
+                    onChange={(e) => handleFormChange({ period: "period6", field: "topic" }, e.target.value)}
+                  />
+                  <Textarea
+                    placeholder="Lesson details..."
+                    className="mt-1"
+                    rows={2}
+                    value={formData.periods.period6.details}
+                    onChange={(e) => handleFormChange({ period: "period6", field: "details" }, e.target.value)}
+                  />
                 </div>
               </div>
 
@@ -264,16 +420,40 @@ export default function LessonPlan() {
                     Period 7 (2:10 – 2:50)
                   </Label>
                   <Input id="period-5" placeholder="Art" className="mt-1" disabled />
-                  <Input id="period-5-topic" placeholder="e.g. Fractions" className="mt-1" />
-                  <Textarea placeholder="Lesson details..." className="mt-1" rows={2} />
+                  <Input
+                    id="period-5-topic"
+                    placeholder="e.g. Fractions"
+                    className="mt-1"
+                    value={formData.periods.period7.topic}
+                    onChange={(e) => handleFormChange({ period: "period7", field: "topic" }, e.target.value)}
+                  />
+                  <Textarea
+                    placeholder="Lesson details..."
+                    className="mt-1"
+                    rows={2}
+                    value={formData.periods.period7.details}
+                    onChange={(e) => handleFormChange({ period: "period7", field: "details" }, e.target.value)}
+                  />
                 </div>
                 <div>
                   <Label htmlFor="period-6" className="text-lg font-bold">
                     Period 8 (2:50 – 3:30)
                   </Label>
                   <Input id="period-6" placeholder="Art" className="mt-1" disabled />
-                  <Input id="period-6-topic" placeholder="e.g. Fractions" className="mt-1" />
-                  <Textarea placeholder="Lesson details..." className="mt-1" rows={2} />
+                  <Input
+                    id="period-6-topic"
+                    placeholder="e.g. Fractions"
+                    className="mt-1"
+                    value={formData.periods.period8.topic}
+                    onChange={(e) => handleFormChange({ period: "period8", field: "topic" }, e.target.value)}
+                  />
+                  <Textarea
+                    placeholder="Lesson details..."
+                    className="mt-1"
+                    rows={2}
+                    value={formData.periods.period8.details}
+                    onChange={(e) => handleFormChange({ period: "period8", field: "details" }, e.target.value)}
+                  />
                 </div>
               </div>
 
@@ -298,7 +478,7 @@ export default function LessonPlan() {
             </div>
 
             <div className="flex justify-center">
-              <Button size="lg" className="w-full md:w-auto text-lg py-6 ">
+              <Button size="lg" className="w-full md:w-auto text-lg py-6 " onClick={handleGeneratePlan}>
                 Generate AI Lesson Plan
               </Button>
             </div>
