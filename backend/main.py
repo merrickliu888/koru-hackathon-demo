@@ -32,12 +32,16 @@ async def chat(request: ChatRequest, cohere_client: CohereClient = Depends(injec
     messages[-1].content = modified_prompt
     messages = [system_prompt] + messages
 
-    response = await cohere_client.chat(
-        model="command-r-plus",
-        messages=messages,
-    )
+    async def stream_response():
+        response = await cohere_client.chat_stream(
+            model="command-r-plus",
+            messages=messages,
+        )
+        async for chunk in response:
+            if chunk.type == "content-delta":
+                yield chunk.text
 
-    return response.message.content[0].text
+    return StreamingResponse(stream_response(), media_type="text/event-stream")
 
 @app.post("/api/generate-lesson-plan")
 async def generate_lesson_plan(request: Request, 
