@@ -1,37 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useRouter } from "next/navigation";
-const subjects = [
-  "Mathematics",
-  "Science",
-  "English",
-  "History",
-  "Art",
-  "Music",
-  "Physical Education",
-  "Foreign Languages",
-];
-
-const grades = ["Elementary", "Middle School", "High School"];
-
-const dummyTeachers = [
-  { id: 1, name: "John Doe", subject: "Mathematics", grade: "High School", available: true, experience: "5 years" },
-  { id: 2, name: "Jane Smith", subject: "Science", grade: "Middle School", available: false, experience: "3 years" },
-  { id: 3, name: "Bob Johnson", subject: "English", grade: "Elementary", available: true, experience: "7 years" },
-  { id: 4, name: "Alice Brown", subject: "History", grade: "High School", available: true, experience: "4 years" },
-  { id: 5, name: "Charlie Davis", subject: "Art", grade: "Elementary", available: false, experience: "2 years" },
-];
 
 const dummyAbsences = [
   {
@@ -58,17 +33,8 @@ const newAbsence = {
 export default function TeacherSearchPage() {
   const router = useRouter();
   const [date, setDate] = useState<Date | undefined>();
-  const [teacherName, setTeacherName] = useState("");
-  const [selectedSubject, setSelectedSubject] = useState("");
-  const [selectedGrade, setSelectedGrade] = useState("");
-  const [showOnlyAvailable, setShowOnlyAvailable] = useState(false);
-  const [requestedTeachers, setRequestedTeachers] = useState<Set<number>>(new Set());
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showNewAbsence, setShowNewAbsence] = useState(false);
-
-  const handleRequest = (teacherId: number) => {
-    setRequestedTeachers((prev) => new Set(prev).add(teacherId));
-  };
 
   const handleAddAbsence = () => {
     if (date) {

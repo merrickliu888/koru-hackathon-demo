@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useSearchParams } from "next/navigation";
@@ -43,10 +43,10 @@ type LessonPlan = {
   };
 };
 
-export default function ChatPage() {
+// Create a client component for the part that uses useSearchParams
+function ChatWithSearchParams() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [lessonPlan, setLessonPlan] = useState<LessonPlan | null>(null);
   const [initialized, setInitialized] = useState(false);
   const searchParams = useSearchParams();
@@ -88,7 +88,6 @@ export default function ChatPage() {
     setInput("");
 
     try {
-      setIsLoading(true);
       const response = await fetch("http://localhost:8000/api/chat", {
         method: "POST",
         headers: {
@@ -121,8 +120,6 @@ export default function ChatPage() {
       }
     } catch (error) {
       console.error("Error:", error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -386,5 +383,14 @@ export default function ChatPage() {
         </div>
       </Card>
     </div>
+  );
+}
+
+// Your main page component remains a server component
+export default function ChatPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ChatWithSearchParams />
+    </Suspense>
   );
 }

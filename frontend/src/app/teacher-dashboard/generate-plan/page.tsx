@@ -257,7 +257,7 @@ export default function LessonPlan() {
               </div>
 
               <div>
-                <Label className="text-lg font-bold">Substitute's Notes</Label>
+                <Label className="text-lg font-bold">Substitute&apos;s Notes</Label>
                 <Textarea
                   disabled
                   placeholder="The best notes"
