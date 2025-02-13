@@ -81,27 +81,52 @@ export default function ChatPage() {
     setInput(e.target.value)
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!input.trim()) return
 
     // Add user message
     const userMessage: Message = { id: Date.now().toString(), role: "user", content: input }
     setMessages((prev) => [...prev, userMessage])
-
-    // Simulate AI response
-    setIsLoading(true)
-    setTimeout(() => {
-      const aiMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: "assistant",
-        content: `Thank you for your question about "${input}". As your ${lessonPlan?.grade} teacher at ${lessonPlan?.school}, I'll do my best to help you understand this topic. Let me check our lesson plan for today...`,
-      }
-      setMessages((prev) => [...prev, aiMessage])
-      setIsLoading(false)
-    }, 1000)
-
     setInput("")
+    
+    try {
+      setIsLoading(true)
+      const response = await fetch('http://localhost:8000/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          messages: [...messages, userMessage],
+          lesson_plan: lessonPlan?.lessonPlan
+        }),
+      })
+
+      if (!response.ok) throw new Error('Network response was not ok')
+
+      const reader = response.body?.getReader()
+      if (!reader) throw new Error('No reader available')
+
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+
+        const text = new TextDecoder().decode(value)
+        setMessages(prev => {
+          const lastMessage = prev[prev.length - 1]
+          if (lastMessage.role === 'assistant') {
+            return [...prev.slice(0, -1), { ...lastMessage, content: lastMessage.content + text }]
+          } else {
+            return [...prev, { id: Date.now().toString(), role: 'assistant', content: text }]
+          }
+        })
+      }
+    } catch (error) {
+      console.error('Error:', error)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
