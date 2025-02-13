@@ -16,14 +16,14 @@ interface Deliverable {
 }
 
 export default function LessonPlan() {
-  const [file, setFile] = useState<File | null>(null);
+  const [files, setFiles] = useState<File[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [deliverables, setDeliverables] = useState<Deliverable[]>([]);
   const [newDeliverable, setNewDeliverable] = useState("");
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
+    if (e.target.files) {
+      setFiles((prev) => [...prev, ...Array.from(e.target.files || [])]);
     }
   };
 
@@ -44,8 +44,8 @@ export default function LessonPlan() {
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsDragging(false);
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      setFile(e.dataTransfer.files[0]);
+    if (e.dataTransfer.files) {
+      setFiles((prev) => [...prev, ...Array.from(e.dataTransfer.files)]);
     }
   };
 
@@ -66,6 +66,10 @@ export default function LessonPlan() {
 
   const removeDeliverable = (id: string) => {
     setDeliverables(deliverables.filter((item) => item.id !== id));
+  };
+
+  const removeFile = (fileToRemove: File) => {
+    setFiles(files.filter((file) => file !== fileToRemove));
   };
 
   return (
@@ -363,39 +367,21 @@ export default function LessonPlan() {
                     </span>
                   </div>
                 </div>
-
-                <div>
-                  <h4 className="font-medium text-sm text-muted-foreground">Availability</h4>
-                  <div className="text-sm space-y-1">
-                    <p className="flex justify-between">
-                      <span>Today</span>
-                      <span className="text-green-500">Available</span>
-                    </p>
-                    <p className="flex justify-between">
-                      <span>Tomorrow</span>
-                      <span className="text-green-500">Available</span>
-                    </p>
-                    <p className="flex justify-between">
-                      <span>Next Week</span>
-                      <span className="text-yellow-500">Limited</span>
-                    </p>
-                  </div>
-                </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="shadow-lg">
+          <Card className="shadow-lg flex flex-col min-h-[300px] max-h-[500px]">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-xl">
                 <Upload className="h-6 w-6" />
                 Upload Files
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-4 flex-1 flex flex-col overflow-hidden">
               <div
                 className={cn(
-                  "relative border-2 border-dashed rounded-lg p-6 transition-colors",
+                  "relative border-2 border-dashed rounded-lg p-6 transition-colors min-h-[150px]",
                   isDragging ? "border-primary" : "hover:border-primary/50"
                 )}
                 onDragEnter={handleDragEnter}
@@ -403,17 +389,33 @@ export default function LessonPlan() {
                 onDragOver={handleDragOver}
                 onDrop={handleDrop}
               >
-                <input type="file" id="file-upload" className="hidden" onChange={handleFileChange} />
+                <input type="file" id="file-upload" className="hidden" onChange={handleFileChange} multiple />
                 <label
                   htmlFor="file-upload"
                   className="flex flex-col items-center justify-center w-full h-full cursor-pointer"
                 >
                   <Upload className="h-12 w-12 text-muted-foreground" />
                   <p className="mt-2 text-sm text-muted-foreground text-center">
-                    {file ? file.name : "Drag and drop a file here, or click to select a file"}
+                    Drag and drop files here, or click to select files
                   </p>
                 </label>
               </div>
+
+              {files.length > 0 && (
+                <div className="space-y-2 flex-1 flex flex-col min-h-0">
+                  <h4 className="text-sm font-medium">Uploaded Files</h4>
+                  <div className="border rounded-lg divide-y flex-1 overflow-y-auto">
+                    {files.map((file, index) => (
+                      <div key={index} className="flex items-center justify-between p-2 hover:bg-gray-50">
+                        <span className="text-sm truncate">{file.name}</span>
+                        <button onClick={() => removeFile(file)} className="text-gray-500 hover:text-red-500">
+                          <X className="h-4 w-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
