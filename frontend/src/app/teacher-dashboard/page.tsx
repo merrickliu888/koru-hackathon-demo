@@ -1,5 +1,5 @@
-import SubstituteTeacherSearch from "@/components/supply-teacher-search";
+import SupplyTeacherSearch from "@/components/supply-teacher-search";
 
 export default function SearchSupplyTeachers() {
-  return <SubstituteTeacherSearch />;
+  return <SupplyTeacherSearch />;
 }

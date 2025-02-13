@@ -1,7 +1,3 @@
-import { AppSidebar } from "@/components/sidebar";
-import { SidebarProvider } from "@/components/ui/sidebar";
-import { BookOpen, Search, Upload, Handshake } from "lucide-react";
-
 // const tabs = [
 //   { label: "Lesson Plans", href: "/supply-dashboard/lesson-plans", icon: Search },
 //   { label: "Chat with Lesson Plan", href: "/supply-dashboard/chat", icon: Handshake },
