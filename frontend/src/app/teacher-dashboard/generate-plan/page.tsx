@@ -137,9 +137,68 @@ export default function LessonPlan() {
     }
   };
 
-  const handleGeneratePlan = () => {
-    console.log("Generating lesson plan with data:", formData);
-    // Add your API call or generation logic here
+  const handleGeneratePlan = async () => {
+    try {
+      const form = new FormData();
+      
+      files.forEach(file => {
+        form.append('files', file);
+      });
+      
+      // Add additional information and period topics
+      form.append('additionalInformation', formData.additionalInformation || '');
+      
+      // Add period topics with proper type checking
+      Object.entries(formData.periods).forEach(([periodKey, periodData]) => {
+        const topic = periodData.topic || '';
+        form.append(`${periodKey}_topic`, topic);
+      });
+
+
+      const response = await fetch('http://localhost:8000/api/generate-lesson-plan', {
+        method: 'POST',
+        body: form,
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate lesson plan');
+      }
+
+      const data = await response.json();
+
+      console.log("DATA", data)
+      const responseFormData = JSON.parse(data.form);
+      
+      // Populate form fields with response data
+      setFormData(prev => ({
+        ...prev,
+        morningRoutine: responseFormData["morning_routine"],
+        periods: {
+          period1: { ...prev.periods.period1, details: responseFormData["period_1"] },
+          period2: { ...prev.periods.period2, details: responseFormData["period_2"] },
+          period3: { ...prev.periods.period3, details: responseFormData["period_3"] },
+          period4: { ...prev.periods.period4, details: responseFormData["period_4"] },
+          period5: { ...prev.periods.period5, details: responseFormData["period_5"] },
+          period6: { ...prev.periods.period6, details: responseFormData["period_6"] },
+          period7: { ...prev.periods.period7, details: responseFormData["period_7"] },
+          period8: { ...prev.periods.period8, details: responseFormData["period_8"] },
+        },
+        recess1: responseFormData["morning_recess"],
+        lunch: responseFormData["lunch"],
+        recess2: responseFormData["afternoon_recess"],
+        otherNotes: responseFormData["other_notes"],
+      }));
+      // Add deliverables
+      const newDeliverables = responseFormData["deliverables"].map((text: string) => ({
+        id: Date.now().toString() + Math.random(),
+        text,
+        checked: false
+      }));
+      setDeliverables(newDeliverables);
+      
+    } catch (error) {
+      console.error('Error generating lesson plan:', error);
+    }
   };
 
   return (
