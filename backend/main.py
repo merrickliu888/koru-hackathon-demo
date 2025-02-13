@@ -8,6 +8,8 @@ from llm import process_images, generate_form
 from constants_and_types import ChatRequest
 from fastapi.responses import StreamingResponse
 import json
+import io
+import PIL.Image
 
 app = fastapi.FastAPI()
 
@@ -47,14 +49,38 @@ async def chat(request: ChatRequest, cohere_client: CohereClient = Depends(injec
 async def generate_lesson_plan(
     files: list[UploadFile] = None,
     additionalInformation: str = Form(...),
+    period1_topic: str = Form(None),
+    period2_topic: str = Form(None),
+    period3_topic: str = Form(None),
+    period4_topic: str = Form(None),
+    period5_topic: str = Form(None),
+    period6_topic: str = Form(None),
+    period7_topic: str = Form(None),
+    period8_topic: str = Form(None),
     gemini_client: genai.Client = Depends(inject_google_genai_client),
     cohere_client: CohereClient = Depends(inject_cohere_client)
 ):
-    print(files)
-    print(additionalInformation)
+    topics = {
+        "period1": period1_topic,
+        "period2": period2_topic,
+        "period3": period3_topic,
+        "period4": period4_topic,
+        "period5": period5_topic,
+        "period6": period6_topic,
+        "period7": period7_topic,
+        "period8": period8_topic,
+    }
+    
     processed_images = []
     if files:
-        processed_images = await process_images(gemini_client, files)
+        # Convert uploaded files to PIL Images
+        for file in files:
+            contents = await file.read()
+            image = PIL.Image.open(io.BytesIO(contents))
+            processed_images.append(image)
+            
+        processed_images = await process_images(gemini_client, processed_images)
     
-    form = await generate_form(cohere_client, additionalInformation, processed_images)
+    print("PROCESSED IMAGESSS", processed_images)
+    form = await generate_form(cohere_client, additionalInformation, processed_images, topics)
     return {"form": form}
