@@ -1,6 +1,6 @@
 import fastapi
 from starlette.middleware.cors import CORSMiddleware
-from fastapi import Request, Depends, UploadFile
+from fastapi import Request, Depends, UploadFile, Form
 from google import genai
 from cohere import AsyncClientV2 as CohereClient
 from clients import inject_google_genai_client, inject_cohere_client
@@ -33,26 +33,28 @@ async def chat(request: ChatRequest, cohere_client: CohereClient = Depends(injec
     messages = [system_prompt] + messages
 
     async def stream_response():
-        response = await cohere_client.chat_stream(
+        stream = cohere_client.chat_stream(
             model="command-r-plus",
             messages=messages,
         )
-        async for chunk in response:
+        async for chunk in stream:
             if chunk.type == "content-delta":
-                yield chunk.text
+                yield chunk.delta.message.content.text
 
     return StreamingResponse(stream_response(), media_type="text/event-stream")
 
 @app.post("/api/generate-lesson-plan")
-async def generate_lesson_plan(request: Request, 
-                            #    files: list[UploadFile] | None, 
-                               gemini_client: genai.Client = Depends(inject_google_genai_client), 
-                               cohere_client: CohereClient = Depends(inject_cohere_client)):
-    print("HERE")
-    body = await request.json()
-    # if files:
-    #     processed_images = await process_images(gemini_client, files)
-    # else:
-    #     processed_images = []
-    form = await generate_form(cohere_client, body["additionalInformation"], [])
+async def generate_lesson_plan(
+    files: list[UploadFile] = None,
+    additionalInformation: str = Form(...),
+    gemini_client: genai.Client = Depends(inject_google_genai_client),
+    cohere_client: CohereClient = Depends(inject_cohere_client)
+):
+    print(files)
+    print(additionalInformation)
+    processed_images = []
+    if files:
+        processed_images = await process_images(gemini_client, files)
+    
+    form = await generate_form(cohere_client, additionalInformation, processed_images)
     return {"form": form}

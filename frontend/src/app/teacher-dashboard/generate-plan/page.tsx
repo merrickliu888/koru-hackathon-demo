@@ -20,6 +20,7 @@ export default function LessonPlan() {
   const [isDragging, setIsDragging] = useState(false);
   const [deliverables, setDeliverables] = useState<Deliverable[]>([]);
   const [newDeliverable, setNewDeliverable] = useState("");
+  const [additionalInfo, setAdditionalInfo] = useState("");
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -71,6 +72,65 @@ export default function LessonPlan() {
   const removeFile = (fileToRemove: File) => {
     setFiles(files.filter((file) => file !== fileToRemove));
   };
+
+  const handleGeneratePlan = async () => {
+    try {
+      const formData = new FormData()
+      files.forEach(file => {
+        formData.append('files', file)
+      })
+      formData.append('additionalInformation', additionalInfo)
+
+      const response = await fetch('http://localhost:8000/api/generate-lesson-plan', {
+        method: 'POST',
+        body: formData,
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to generate lesson plan')
+      }
+
+      const data = await response.json()
+      console.log('Generated plan:', data)
+      
+      // Add state for form fields
+      const form = data.form ? JSON.parse(data.form) : null;
+      if (form) {
+        // Update deliverables
+        setDeliverables(form.deliverables.map((text: string) => ({
+          id: Date.now().toString() + Math.random(),
+          text,
+          checked: false
+        })));
+
+        // Update all textareas and inputs with form data
+        const elements = {
+          'morning-routine': form.morning_routine,
+          'period-1': form.period_1,
+          'period-2': form.period_2,
+          'recess': form.morning_recess,
+          'period-3': form.period_3,
+          'period-4': form.period_4,
+          'lunch': form.lunch,
+          'period-5': form.period_5,
+          'period-6': form.period_6,
+          'period-7': form.period_7,
+          'period-8': form.period_8,
+          'other-notes': form.other_notes,
+        };
+
+        // Update each element
+        Object.entries(elements).forEach(([id, value]) => {
+          const element = document.getElementById(id);
+          if (element instanceof HTMLTextAreaElement || element instanceof HTMLInputElement) {
+            element.value = value as string;
+          }
+        });
+      }
+    } catch (error) {
+      console.error('Error generating lesson plan:', error)
+    }
+  }
 
   return (
     <div className="min-h-screen flex flex-col p-6 w-full">
@@ -291,6 +351,8 @@ export default function LessonPlan() {
               </Label>
               <Textarea
                 id="things-to-remember"
+                value={additionalInfo}
+                onChange={(e) => setAdditionalInfo(e.target.value)}
                 placeholder="Add any additional information here..."
                 className="mt-1"
                 rows={3}
@@ -298,7 +360,11 @@ export default function LessonPlan() {
             </div>
 
             <div className="flex justify-center">
-              <Button size="lg" className="w-full md:w-auto text-lg py-6 ">
+              <Button 
+                size="lg" 
+                className="w-full md:w-auto text-lg py-6"
+                onClick={handleGeneratePlan}
+              >
                 Generate AI Lesson Plan
               </Button>
             </div>
