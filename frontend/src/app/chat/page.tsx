@@ -45,10 +45,35 @@ type LessonPlan = {
 
 // Create a client component for the part that uses useSearchParams
 function ChatWithSearchParams() {
+  // Initialize with default empty values
+  const defaultLessonPlan = {
+    id: "",
+    teacher: "",
+    school: "",
+    grade: "",
+    lessonPlan: {
+      deliverables: [],
+      morning_routine: "",
+      period_1: "",
+      period_2: "",
+      morning_recess: "",
+      period_3: "",
+      period_4: "",
+      period_5: "",
+      period_6: "",
+      period_7: "",
+      period_8: "",
+      lunch: "",
+      afternoon_recess: "",
+      other_notes: ""
+    }
+  };
+
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
-  const [lessonPlan, setLessonPlan] = useState<LessonPlan | null>(null);
+  const [lessonPlan, setLessonPlan] = useState<LessonPlan>(defaultLessonPlan);  // Initialize with default values
   const [initialized, setInitialized] = useState(false);
+  const [notes, setNotes] = useState("");
   const searchParams = useSearchParams();
 
   useEffect(() => {
@@ -169,7 +194,13 @@ function ChatWithSearchParams() {
 
             <div>
               <Label className="text-lg font-bold">Supply Teacher&apos;s Notes</Label>
-              <Textarea placeholder="Enter notes here..." className="mt-2" rows={4} />
+              <Textarea 
+                placeholder="Enter notes here..." 
+                className="mt-2" 
+                rows={4}
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+              />
             </div>
 
             <hr className="border-gray-500 dark:border-gray-700 border-1" />
@@ -179,25 +210,30 @@ function ChatWithSearchParams() {
                 <Label htmlFor="date" className="text-lg font-bold">
                   Date
                 </Label>
-                <Input id="date" type="date" className="mt-1" disabled />
+                <Input id="date" value="2025-02-24" className="mt-1" readOnly />
               </div>
               <div>
                 <Label htmlFor="grade" className="text-lg font-bold">
                   Grade
                 </Label>
-                <Input id="grade" placeholder="e.g. Grade 5" className="mt-1" disabled />
+                <Input id="grade" value="Grade 5" className="mt-1" readOnly />
               </div>
               <div>
                 <Label htmlFor="teacher" className="text-lg font-bold">
                   Teacher
                 </Label>
-                <Input id="teacher" placeholder="Teacher's name" className="mt-1" disabled />
+                <Input 
+                  id="teacher" 
+                  value={lessonPlan?.teacher || ""} 
+                  className="mt-1" 
+                  readOnly 
+                />
               </div>
               <div>
                 <Label htmlFor="room" className="text-lg font-bold">
                   Room
                 </Label>
-                <Input id="room" placeholder="Room number" className="mt-1" disabled />
+                <Input id="room" value={"210"} className="mt-1" readOnly />
               </div>
             </div>
 
@@ -206,9 +242,9 @@ function ChatWithSearchParams() {
                 Morning Routine
               </Label>
               <Textarea
-                disabled={true}
+                readOnly
                 id="morning-routine"
-                placeholder="Describe the morning routine..."
+                value={lessonPlan?.lessonPlan.morning_routine}
                 className="mt-1"
                 rows={3}
               />
@@ -219,17 +255,17 @@ function ChatWithSearchParams() {
                 <Label htmlFor="period-1" className="text-lg font-bold">
                   Period 1 (8:45 – 9:15)
                 </Label>
-                <Input id="period-1" placeholder="Reading" className="mt-1" disabled />
-                <Input id="period-1-topic" placeholder="e.g. Fractions" className="mt-1" disabled />
-                <Textarea placeholder="Lesson details..." className="mt-1" rows={2} disabled />
+                <Input id="period-1" value="Math" className="mt-1" readOnly />
+                <Input id="period-1-topic" value="Fractions" className="mt-1" readOnly />
+                <Textarea value={lessonPlan?.lessonPlan.period_1} className="mt-1" rows={2} readOnly />
               </div>
               <div>
                 <Label htmlFor="period-2" className="text-lg font-bold">
                   Period 2 (9:15 – 9:55)
                 </Label>
-                <Input id="period-2" placeholder="English" className="mt-1" disabled />
-                <Input id="period-2-topic" placeholder="e.g. Fractions" className="mt-1" disabled />
-                <Textarea placeholder="Lesson details..." className="mt-1" rows={2} disabled />
+                <Input id="period-2" value="English" className="mt-1" readOnly />
+                <Input id="period-2-topic" value="Essay Writing" className="mt-1" readOnly />
+                <Textarea value={lessonPlan?.lessonPlan.period_2} className="mt-1" rows={2} readOnly />
               </div>
             </div>
 
@@ -237,7 +273,7 @@ function ChatWithSearchParams() {
               <Label htmlFor="recess" className="text-lg font-bold">
                 Recess (9:55 – 10:10)
               </Label>
-              <Input id="recess" placeholder="e.g. YARD DUTY ON THE FIELD" className="mt-1" disabled />
+              <Input id="recess" value={lessonPlan?.lessonPlan.morning_recess} className="mt-1" readOnly />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
@@ -245,17 +281,17 @@ function ChatWithSearchParams() {
                 <Label htmlFor="period-3" className="text-lg font-bold">
                   Period 3 (10:10 – 10:50)
                 </Label>
-                <Input id="period-3" placeholder="Music" className="mt-1" disabled />
-                <Input id="period-3-topic" placeholder="e.g. Fractions" className="mt-1" disabled />
-                <Textarea placeholder="Lesson details..." className="mt-1" rows={2} disabled />
+                <Input id="period-3" value="Music" className="mt-1" readOnly />
+                <Input id="period-3-topic" value="History of Music" className="mt-1" readOnly />
+                <Textarea value={lessonPlan?.lessonPlan.period_3} className="mt-1" rows={2} readOnly />
               </div>
               <div>
                 <Label htmlFor="period-4" className="text-lg font-bold">
                   Period 4 (10:50 – 11:30)
                 </Label>
-                <Input id="period-4" placeholder="Math" className="mt-1" disabled />
-                <Input id="period-4-topic" placeholder="e.g. Fractions" className="mt-1" disabled />
-                <Textarea placeholder="Lesson details..." className="mt-1" rows={2} disabled />
+                <Input id="period-4" value="Art" className="mt-1" readOnly />
+                <Input id="period-4-topic" value="Art History" className="mt-1" readOnly />
+                <Textarea value={lessonPlan?.lessonPlan.period_4} className="mt-1" rows={2} readOnly />
               </div>
             </div>
 
@@ -263,7 +299,7 @@ function ChatWithSearchParams() {
               <Label htmlFor="lunch" className="text-lg font-bold">
                 Lunch (11:30 – 12:30)
               </Label>
-              <Input id="lunch" placeholder="Lunch routine..." className="mt-1" disabled />
+              <Input id="lunch" value={lessonPlan?.lessonPlan.lunch} className="mt-1" readOnly />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
@@ -271,17 +307,17 @@ function ChatWithSearchParams() {
                 <Label htmlFor="period-5" className="text-lg font-bold">
                   Period 5 (12:35 – 1:15)
                 </Label>
-                <Input id="period-5" placeholder="Art" className="mt-1" disabled />
-                <Input id="period-5-topic" placeholder="e.g. Fractions" className="mt-1" disabled />
-                <Textarea placeholder="Lesson details..." className="mt-1" rows={2} disabled />
+                <Input id="period-5" value="Art" className="mt-1" readOnly />
+                <Input id="period-5-topic" value="Art History" className="mt-1" readOnly />
+                <Textarea value={lessonPlan?.lessonPlan.period_5} className="mt-1" rows={2} readOnly />
               </div>
               <div>
                 <Label htmlFor="period-6" className="text-lg font-bold">
                   Period 6 (1:15 – 1:55)
                 </Label>
-                <Input id="period-6" placeholder="French" className="mt-1" disabled />
-                <Input id="period-6-topic" placeholder="e.g. Fractions" className="mt-1" disabled />
-                <Textarea placeholder="Lesson details..." className="mt-1" rows={2} disabled />
+                <Input id="period-6" value="Physical Education" className="mt-1" readOnly />
+                <Input id="period-6-topic" value="Basketball" className="mt-1" readOnly />
+                <Textarea value={lessonPlan?.lessonPlan.period_6} className="mt-1" rows={2} readOnly />
               </div>
             </div>
 
@@ -289,7 +325,7 @@ function ChatWithSearchParams() {
               <Label htmlFor="recess" className="text-lg font-bold">
                 Recess (1:55 – 2:10)
               </Label>
-              <Input id="recess" placeholder="e.g. YARD DUTY ON THE FIELD" className="mt-1" disabled />
+              <Input id="recess" value={lessonPlan?.lessonPlan.afternoon_recess} className="mt-1" readOnly />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
@@ -297,17 +333,17 @@ function ChatWithSearchParams() {
                 <Label htmlFor="period-5" className="text-lg font-bold">
                   Period 7 (2:10 – 2:50)
                 </Label>
-                <Input id="period-5" placeholder="Art" className="mt-1" disabled />
-                <Input id="period-5-topic" placeholder="e.g. Fractions" className="mt-1" disabled />
-                <Textarea placeholder="Lesson details..." className="mt-1" rows={2} disabled />
+                <Input id="period-5" value="Science" className="mt-1" readOnly />
+                <Input id="period-5-topic" value="Laws of Motion" className="mt-1" readOnly />
+                <Textarea value={lessonPlan?.lessonPlan.period_7} className="mt-1" rows={2} readOnly />
               </div>
               <div>
                 <Label htmlFor="period-6" className="text-lg font-bold">
                   Period 8 (2:50 – 3:30)
                 </Label>
-                <Input id="period-6" placeholder="Art" className="mt-1" disabled />
-                <Input id="period-6-topic" placeholder="e.g. Fractions" className="mt-1" disabled />
-                <Textarea placeholder="Lesson details..." className="mt-1" rows={2} disabled />
+                <Input id="period-6" value="Writing" className="mt-1" readOnly />
+                <Input id="period-6-topic" value="Creative Writing" className="mt-1" readOnly />
+                <Textarea value={lessonPlan?.lessonPlan.period_8} className="mt-1" rows={2} readOnly />
               </div>
             </div>
 
@@ -316,12 +352,34 @@ function ChatWithSearchParams() {
                 Other Notes
               </Label>
               <Textarea
-                disabled={true}
+                readOnly
                 id="other-notes"
-                placeholder="Add any other notes here..."
+                value={lessonPlan?.lessonPlan.other_notes}
                 className="mt-1"
                 rows={3}
               />
+            </div>
+            
+            <div>
+              <Label htmlFor="other-notes" className="text-lg font-bold">
+                Important Information
+              </Label>
+              <div className="mt-2">
+                <h4 className="font-medium">Allergies:</h4>
+                <ul className="list-disc list-inside">
+                  <li>Alex Huh: Peanut Allergy, Gluten Intolerance</li>
+                  <li>John Doe: Dairy Allergy</li>
+                  <li>Jane Smith: Egg Allergy</li>
+                </ul>
+              </div>
+              <div className="mt-2">
+                <h4 className="font-medium">Emergency Plans:</h4>
+                <ul className="list-disc list-inside">
+                  <li>In case of fire, evacuate to the nearest exit and gather at the designated meeting point.</li>
+                  <li>For medical emergencies, call the school nurse and provide first aid if trained.</li>
+                  <li>In case of severe weather, move to the interior rooms away from windows.</li>
+                </ul>
+              </div>
             </div>
           </div>
         </CardContent>
@@ -382,6 +440,7 @@ function ChatWithSearchParams() {
           </form>
         </div>
       </Card>
+      
     </div>
   );
 }

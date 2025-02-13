@@ -164,9 +164,8 @@ export default function LessonPlan() {
       }
 
       const data = await response.json();
-
-      console.log("DATA", data);
       const responseFormData = JSON.parse(data.form);
+      console.log("RESPONSE FORM DATA", responseFormData);
 
       // Populate form fields with response data
       setFormData((prev) => ({
