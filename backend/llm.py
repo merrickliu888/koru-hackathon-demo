@@ -27,14 +27,21 @@ async def generate_form(cohere_client: CohereClient, additional_info: str, proce
     # Add topics to the prompt if provided
     topics_str = ""
     if topics:
-        topics_str = "\nPeriod topics:\n" + "\n".join([f"{k}: {v}" for k, v in topics.items() if v])
+        topics_str = "\nPeriod topics:\n" + "\n".join([f"{k}: {v if v else 'No topic provided'}" for k, v in topics.items()])
+
+    print("TOPICSS", topics_str)
+
+    final_prompt = f"""Generate a JSON Lesson plan based on the following documents: {documents_text}. Each of the periods should have information about the topic have a main topic. 
+    Make sure that the information is correct and relevant to the topic: {topics_str}.
+    Make sure to also incorporate any information that was provided by the teacher. Teacher information: {additional_info}."""
+
 
     response = await cohere_client.chat(
         model="command-r-plus",
         messages = [
             {
                 "role": "user",
-                "content": f"Generate a JSON Lesson plan based on the following documents:{documents_text}\n{topics_str}\nTeacher's context: {additional_info}\n\nRespond only with a JSON object that has the following fields: deliverables (array of strings), morning_routine (string), period_1 through period_8 (strings), morning_recess (string), lunch (string), afternoon_recess (string), and other_notes (string)",
+                "content": final_prompt,
             }
         ],
         response_format={
