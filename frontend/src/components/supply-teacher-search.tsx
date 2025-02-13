@@ -10,6 +10,13 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const subjects = [
   "Mathematics", "Science", "English", "History", "Art", "Music", "Physical Education", "Foreign Languages"
@@ -25,6 +32,27 @@ const dummyTeachers = [
   { id: 5, name: "Charlie Davis", subject: "Art", grade: "Elementary", available: false, experience: "2 years" },
 ];
 
+const dummyAbsences = [
+  { 
+    id: 1, 
+    date: "2024-03-20", 
+    supplyTeacher: "John Doe",
+    status: "completed" 
+  },
+  { 
+    id: 2, 
+    date: "2024-03-25", 
+    supplyTeacher: "Pending",
+    status: "pending" 
+  },
+  { 
+    id: 3, 
+    date: "2024-04-01", 
+    supplyTeacher: "Not assigned",
+    status: "upcoming" 
+  },
+];
+
 export default function TeacherSearchPage() {
   const [date, setDate] = useState<Date | undefined>();
   const [teacherName, setTeacherName] = useState("");
@@ -32,9 +60,32 @@ export default function TeacherSearchPage() {
   const [selectedGrade, setSelectedGrade] = useState("");
   const [showOnlyAvailable, setShowOnlyAvailable] = useState(false);
   const [requestedTeachers, setRequestedTeachers] = useState<Set<number>>(new Set());
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleRequest = (teacherId: number) => {
     setRequestedTeachers((prev) => new Set(prev).add(teacherId));
+  };
+
+  const handleAddAbsence = () => {
+    if (date) {
+      // Handle adding the absence here
+      console.log("Adding absence for:", format(date, "yyyy-MM-dd"));
+      setIsModalOpen(false);
+      setDate(undefined);
+    }
+  };
+
+  const getStatusBadgeClass = (status: string) => {
+    switch (status) {
+      case "completed":
+        return "bg-green-100 text-green-800";
+      case "pending":
+        return "bg-yellow-100 text-yellow-800";
+      case "upcoming":
+        return "bg-blue-100 text-blue-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
   };
 
   const filteredTeachers = dummyTeachers.filter((teacher) => {
@@ -48,45 +99,31 @@ export default function TeacherSearchPage() {
 
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6">Find a Supply Teacher</h1>
+      <h1 className="text-2xl font-bold mb-6">Manage Absences</h1>
 
-      {/* Filters */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="outline" className={cn("w-full justify-start text-left font-normal", !date && "text-muted-foreground")}>
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              {date ? format(date, "PPP") : "Pick a date"}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0">
-            <Calendar mode="single" selected={date} onSelect={setDate} initialFocus />
-          </PopoverContent>
-        </Popover>
-
-        <Input placeholder="Enter teacher name" value={teacherName} onChange={(e) => setTeacherName(e.target.value)} />
-
-        <Select value={selectedSubject} onValueChange={setSelectedSubject}>
-          <SelectTrigger>
-            <SelectValue placeholder="Select subject" />
-          </SelectTrigger>
-          <SelectContent>
-            {subjects.map((subject) => (
-              <SelectItem key={subject} value={subject}>{subject}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-
-        <Select value={selectedGrade} onValueChange={setSelectedGrade}>
-          <SelectTrigger>
-            <SelectValue placeholder="Select grade level" />
-          </SelectTrigger>
-          <SelectContent>
-            {grades.map((grade) => (
-              <SelectItem key={grade} value={grade}>{grade}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+      <div className="mb-6">
+        <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+          <DialogTrigger asChild>
+            <Button variant="default">Add an absence</Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Select Absence Date</DialogTitle>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <Calendar
+                mode="single"
+                selected={date}
+                onSelect={setDate}
+                className="rounded-md border"
+                initialFocus
+              />
+              <Button onClick={handleAddAbsence} disabled={!date}>
+                Confirm Absence
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
 
       {/* Table */}
@@ -94,28 +131,27 @@ export default function TeacherSearchPage() {
         <table className="w-full">
           <thead>
             <tr className="bg-gray-50 text-left">
-              <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">Name</th>
-              <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">Subject</th>
-              <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">Grade</th>
-              <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">Availability</th>
-              <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">Request</th>
+              <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">Date</th>
+              <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">Supply Teacher</th>
+              <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase">Status</th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {filteredTeachers.map((teacher) => (
-              <tr key={teacher.id} className="hover:bg-gray-50">
-                <td className="px-6 py-4 whitespace-nowrap text-sm">{teacher.name}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{teacher.subject}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{teacher.grade}</td>
+            {dummyAbsences.map((absence) => (
+              <tr key={absence.id} className="hover:bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap text-sm">
-                  <span className={cn("px-2 inline-flex text-xs leading-5 font-semibold rounded-full", teacher.available ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800")}>
-                    {teacher.available ? "Available" : "Not Available"}
-                  </span>
+                  {format(new Date(absence.date), "MMMM d, yyyy")}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm">
-                  <Button variant="outline" onClick={() => handleRequest(teacher.id)} disabled={requestedTeachers.has(teacher.id)}>
-                    {requestedTeachers.has(teacher.id) ? "Requested" : "Request"}
-                  </Button>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  {absence.supplyTeacher}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <span className={cn(
+                    "px-2 inline-flex text-xs leading-5 font-semibold rounded-full",
+                    getStatusBadgeClass(absence.status)
+                  )}>
+                    {absence.status.charAt(0).toUpperCase() + absence.status.slice(1)}
+                  </span>
                 </td>
               </tr>
             ))}
