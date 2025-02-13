@@ -1,10 +1,10 @@
 import { AppSidebar } from "@/components/sidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { BookOpen, Search, Upload, Handshake } from "lucide-react";
+import { Handshake, Upload } from "lucide-react";
 
 const tabs = [
-  { label: "SearchSupply Teacher", href: "/teacher-dashboard/", icon: Search },
-  // { label: "Upload Global Docs", href: "/teacher-dashboard/supply-teacher-requests", icon: Handshake },
+  { label: "Supply Teacher Handoff", href: "/teacher-dashboard/", icon: Handshake },
+  { label: "Upload Global Docs", href: "/teacher-dashboard/global-documents", icon: Upload },
   // { label: "Generate Lesson Plan", href: "/teacher-dashboard/generate-lesson-plan", icon: BookOpen },
   // { label: "Upload Docs", href: "/teacher-dashboard/upload-docs", icon: Upload },
 ];

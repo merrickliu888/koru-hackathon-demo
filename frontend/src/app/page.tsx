@@ -7,9 +7,7 @@ export default function LandingPage() {
   const router = useRouter();
   return (
     <div>
-      <Button onClick={() => router.push("/teacher-dashboard/search-supply-teachers")}>Teacher Dashboard</Button>
-      <Button onClick={() => router.push("/admin-dashboard")}>Admin Dashboard</Button>
-      <Button onClick={() => router.push("/supply-teacher-dashboard")}>Supply Teacher Dashboard</Button>
+      <Button onClick={() => router.push("/teacher-dashboard")}>Teacher Dashboard</Button>
     </div>
     // <div className="flex flex-col min-h-[100dvh]">
     //   <LandingPageHeader />
