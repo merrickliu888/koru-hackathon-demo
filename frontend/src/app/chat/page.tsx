@@ -1,9 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, Globe, MoreHorizontal, Mic, X } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useSearchParams } from "next/navigation";
 import type React from "react";
@@ -11,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
+
 // Stub types
 type Message = {
   role: "user" | "assistant";
@@ -368,7 +367,6 @@ export default function ChatPage() {
                   <p className={`text-sm ${message.role === "user" ? "text-gray-800" : "text-[#21337A]"}`}>
                     {message.content}
                   </p>
-                  {message.role === "assistant" && <div className="flex gap-2 mt-2"></div>}
                 </div>
               </div>
             </div>

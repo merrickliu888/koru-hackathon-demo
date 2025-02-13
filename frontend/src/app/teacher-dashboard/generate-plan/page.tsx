@@ -140,37 +140,36 @@ export default function LessonPlan() {
   const handleGeneratePlan = async () => {
     try {
       const form = new FormData();
-      
-      files.forEach(file => {
-        form.append('files', file);
+
+      files.forEach((file) => {
+        form.append("files", file);
       });
-      
+
       // Add additional information and period topics
-      form.append('additionalInformation', formData.additionalInformation || '');
-      
+      form.append("additionalInformation", formData.additionalInformation || "");
+
       // Add period topics with proper type checking
       Object.entries(formData.periods).forEach(([periodKey, periodData]) => {
-        const topic = periodData.topic || '';
+        const topic = periodData.topic || "";
         form.append(`${periodKey}_topic`, topic);
       });
 
-
-      const response = await fetch('http://localhost:8000/api/generate-lesson-plan', {
-        method: 'POST',
+      const response = await fetch("http://localhost:8000/api/generate-lesson-plan", {
+        method: "POST",
         body: form,
       });
 
       if (!response.ok) {
-        throw new Error('Failed to generate lesson plan');
+        throw new Error("Failed to generate lesson plan");
       }
 
       const data = await response.json();
 
-      console.log("DATA", data)
+      console.log("DATA", data);
       const responseFormData = JSON.parse(data.form);
-      
+
       // Populate form fields with response data
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
         morningRoutine: responseFormData["morning_routine"],
         periods: {
@@ -192,12 +191,11 @@ export default function LessonPlan() {
       const newDeliverables = responseFormData["deliverables"].map((text: string) => ({
         id: Date.now().toString() + Math.random(),
         text,
-        checked: false
+        checked: false,
       }));
       setDeliverables(newDeliverables);
-      
     } catch (error) {
-      console.error('Error generating lesson plan:', error);
+      console.error("Error generating lesson plan:", error);
     }
   };
 
