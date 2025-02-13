@@ -9,7 +9,7 @@ const dmSans = DM_Sans({
 
 export const metadata: Metadata = {
   title: "Relay",
-  description: "Streamline Substitute Teacher Management",
+  description: "Streamline Supply Teacher Management",
 };
 
 export default function RootLayout({

@@ -237,7 +237,7 @@ export default function LessonPlan() {
                     ))
                   ) : (
                     <div className="text-sm text-muted-foreground italic">
-                      No deliverables added yet. Add tasks for the substitute teacher below.
+                      No deliverables added yet. Add tasks for the supply teacher below.
                     </div>
                   )}
                   <div className="flex items-center space-x-2 mt-2">
@@ -245,7 +245,7 @@ export default function LessonPlan() {
                       type="text"
                       value={newDeliverable}
                       onChange={(e) => setNewDeliverable(e.target.value)}
-                      placeholder="Add new deliverable for substitute..."
+                      placeholder="Add new deliverable for supply teacher..."
                       className="flex-1 bg-transparent border-b border-gray-300 focus:border-gray-500 focus:outline-none"
                       onKeyPress={(e) => e.key === "Enter" && addDeliverable()}
                     />
@@ -257,7 +257,7 @@ export default function LessonPlan() {
               </div>
 
               <div>
-                <Label className="text-lg font-bold">Substitute&apos;s Notes</Label>
+                <Label className="text-lg font-bold">Supply Teacher&apos;s Notes</Label>
                 <Textarea
                   disabled
                   placeholder="The best notes"
@@ -547,14 +547,14 @@ export default function LessonPlan() {
         <div className="space-y-6">
           <Card className="shadow-lg pb-4">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-xl">Your Selected Substitute</CardTitle>
+              <CardTitle className="flex items-center gap-2 text-xl">Your Selected Supply Teacher</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center space-x-4">
                 <div className="relative h-24 w-24 border-2 border-gray-400 rounded-full">
                   <img
                     src="/placeholder-avatar.png"
-                    alt="Substitute Teacher"
+                    alt="Supply Teacher"
                     className="rounded-full object-cover w-full h-full"
                   />
                 </div>

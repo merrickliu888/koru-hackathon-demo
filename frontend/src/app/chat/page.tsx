@@ -168,7 +168,7 @@ function ChatWithSearchParams() {
             </div>
 
             <div>
-              <Label className="text-lg font-bold">Substitute&apos;s Notes</Label>
+              <Label className="text-lg font-bold">Supply Teacher&apos;s Notes</Label>
               <Textarea placeholder="Enter notes here..." className="mt-2" rows={4} />
             </div>
 

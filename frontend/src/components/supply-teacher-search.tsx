@@ -30,7 +30,7 @@ const newAbsence = {
   status: "upcoming",
 };
 
-export default function TeacherSearchPage() {
+export default function SupplyTeacherSearch() {
   const router = useRouter();
   const [date, setDate] = useState<Date | undefined>();
   const [isModalOpen, setIsModalOpen] = useState(false);
