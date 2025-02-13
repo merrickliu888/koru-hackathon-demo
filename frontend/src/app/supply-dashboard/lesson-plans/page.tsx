@@ -21,7 +21,18 @@ const lessonPlans = [
     grade: "5th Grade",
     status: "Upcoming",
     lessonPlan: {
-      deliverables: [],
+      deliverables: [
+        {
+          id: "1",
+          text: "Deliverable 1",
+          checked: false,
+        },
+        {
+          id: "2",
+          text: "Deliverable 2",
+          checked: false,
+        },
+      ],
       morning_routine: "",
       period_1: "",
       period_2: "",
@@ -45,12 +56,21 @@ const lessonPlans = [
     grade: "10th Grade",
     status: "Completed",
     lessonPlan: {
-      deliverables: [],
+      deliverables: [{
+        id: "1",
+        text: "Deliverable 1",
+        checked: true,
+      },
+        {
+          id: "2",
+          text: "Deliverable 2",
+          checked: false,
+        },
+      ],
       morning_routine: "",
       period_1: "",
       period_2: "",
       morning_recess: "",
-      period_3: "",
       period_4: "",
       period_5: "",
       period_6: "",
@@ -69,7 +89,17 @@ const lessonPlans = [
     grade: "8th Grade",
     status: "Upcoming",
     lessonPlan: {
-      deliverables: [],
+      deliverables: [{
+        id: "1",
+        text: "Deliverable 1",
+        checked: true,
+      },
+        {
+          id: "2",
+          text: "Deliverable 2",
+          checked: false,
+        },
+      ],
       morning_routine: "",
       period_1: "",
       period_2: "",
@@ -93,13 +123,19 @@ const lessonPlans = [
     grade: "3rd Grade",
     status: "Completed",
     lessonPlan: {
-      deliverables: [],
+      deliverables: [{
+        id: "1",
+        text: "Deliverable 1",
+        checked: true,
+      },
+        {
+          id: "2",
+          text: "Deliverable 2",
+          checked: false,
+        },
+      ],
       morning_routine: "",
       period_1: "",
-      period_2: "",
-      morning_recess: "",
-      period_3: "",
-      period_4: "",
       period_5: "",
       period_6: "",
       afternoon_recess: "",
@@ -117,14 +153,20 @@ const lessonPlans = [
     grade: "11th Grade",
     status: "Upcoming",
     lessonPlan: {
-      deliverables: [],
+      deliverables: [{
+        id: "1",
+        text: "Deliverable 1",
+        checked: true,
+      },
+        {
+          id: "2",
+          text: "Deliverable 2",
+          checked: false,
+        },
+      ],
       morning_routine: "",
       period_1: "",
       period_2: "",
-      morning_recess: "",
-      period_3: "",
-      period_4: "",
-      period_5: "",
       period_6: "",
       afternoon_recess: "",
       period_7: "",
@@ -161,6 +203,8 @@ export default function LessonPlansPage() {
       `/chat?id=${plan.id}&teacher=${encodeURIComponent(plan.teacher)}&school=${encodeURIComponent(plan.school)}&grade=${encodeURIComponent(plan.grade)}&lessonPlan=${encodeURIComponent(JSON.stringify(plan.lessonPlan))}`,
     )
   }
+
+  console.log("lesson plan", lessonPlans[0].lessonPlan)
 
   return (
     <div className="container mx-auto p-6">
