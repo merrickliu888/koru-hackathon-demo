@@ -1,16 +1,16 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
-import { CalendarIcon } from "lucide-react"
-import { format } from "date-fns"
-import { cn } from "@/lib/utils"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { useRouter } from "next/navigation"
-
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { CalendarIcon } from "lucide-react";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 // Updated stub data for lesson plans
 const lessonPlans = [
   {
@@ -56,11 +56,12 @@ const lessonPlans = [
     grade: "10th Grade",
     status: "Completed",
     lessonPlan: {
-      deliverables: [{
-        id: "1",
-        text: "Deliverable 1",
-        checked: true,
-      },
+      deliverables: [
+        {
+          id: "1",
+          text: "Deliverable 1",
+          checked: true,
+        },
         {
           id: "2",
           text: "Deliverable 2",
@@ -89,11 +90,12 @@ const lessonPlans = [
     grade: "8th Grade",
     status: "Upcoming",
     lessonPlan: {
-      deliverables: [{
-        id: "1",
-        text: "Deliverable 1",
-        checked: true,
-      },
+      deliverables: [
+        {
+          id: "1",
+          text: "Deliverable 1",
+          checked: true,
+        },
         {
           id: "2",
           text: "Deliverable 2",
@@ -123,11 +125,12 @@ const lessonPlans = [
     grade: "3rd Grade",
     status: "Completed",
     lessonPlan: {
-      deliverables: [{
-        id: "1",
-        text: "Deliverable 1",
-        checked: true,
-      },
+      deliverables: [
+        {
+          id: "1",
+          text: "Deliverable 1",
+          checked: true,
+        },
         {
           id: "2",
           text: "Deliverable 2",
@@ -153,11 +156,12 @@ const lessonPlans = [
     grade: "11th Grade",
     status: "Upcoming",
     lessonPlan: {
-      deliverables: [{
-        id: "1",
-        text: "Deliverable 1",
-        checked: true,
-      },
+      deliverables: [
+        {
+          id: "1",
+          text: "Deliverable 1",
+          checked: true,
+        },
         {
           id: "2",
           text: "Deliverable 2",
@@ -175,40 +179,47 @@ const lessonPlans = [
       other_notes: "",
     },
   },
-]
+];
 
-const schools = [...new Set(lessonPlans.map((plan) => plan.school))]
-const grades = [...new Set(lessonPlans.map((plan) => plan.grade))]
+const schools = [...new Set(lessonPlans.map((plan) => plan.school))];
+const grades = [...new Set(lessonPlans.map((plan) => plan.grade))];
 
 export default function LessonPlansPage() {
-  const [date, setDate] = useState<Date | undefined>()
-  const [schoolFilter, setSchoolFilter] = useState("")
-  const [teacherFilter, setTeacherFilter] = useState("")
-  const [gradeFilter, setGradeFilter] = useState("")
-  const [statusFilter, setStatusFilter] = useState("")
-  const router = useRouter()
+  const [date, setDate] = useState<Date | undefined>();
+  const [schoolFilter, setSchoolFilter] = useState("");
+  const [teacherFilter, setTeacherFilter] = useState("");
+  const [gradeFilter, setGradeFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+  const router = useRouter();
 
   const filteredLessonPlans = lessonPlans.filter((plan) => {
-    const matchesDate = !date || plan.date === format(date, "yyyy-MM-dd")
-    const matchesSchool = !schoolFilter || plan.school === schoolFilter
-    const matchesTeacher = !teacherFilter || plan.teacher.toLowerCase().includes(teacherFilter.toLowerCase())
-    const matchesGrade = !gradeFilter || plan.grade === gradeFilter
-    const matchesStatus = !statusFilter || plan.status === statusFilter
+    const matchesDate = !date || plan.date === format(date, "yyyy-MM-dd");
+    const matchesSchool = !schoolFilter || plan.school === schoolFilter;
+    const matchesTeacher = !teacherFilter || plan.teacher.toLowerCase().includes(teacherFilter.toLowerCase());
+    const matchesGrade = !gradeFilter || plan.grade === gradeFilter;
+    const matchesStatus = !statusFilter || plan.status === statusFilter;
 
-    return matchesDate && matchesSchool && matchesTeacher && matchesGrade && matchesStatus
-  })
+    return matchesDate && matchesSchool && matchesTeacher && matchesGrade && matchesStatus;
+  });
 
   const handleViewLesson = (plan: (typeof lessonPlans)[0]) => {
     router.push(
-      `/chat?id=${plan.id}&teacher=${encodeURIComponent(plan.teacher)}&school=${encodeURIComponent(plan.school)}&grade=${encodeURIComponent(plan.grade)}&lessonPlan=${encodeURIComponent(JSON.stringify(plan.lessonPlan))}`,
-    )
-  }
+      `/chat?id=${plan.id}&teacher=${encodeURIComponent(plan.teacher)}&school=${encodeURIComponent(
+        plan.school
+      )}&grade=${encodeURIComponent(plan.grade)}&lessonPlan=${encodeURIComponent(JSON.stringify(plan.lessonPlan))}`
+    );
+  };
 
-  console.log("lesson plan", lessonPlans[0].lessonPlan)
+  console.log("lesson plan", lessonPlans[0].lessonPlan);
 
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6">Lesson Plans</h1>
+      <div className="flex items-center gap-2 mb-6">
+        <Image src="/relay.svg" alt="Relay" width={32} height={32} />
+        <span className="text-3xl font-bold" style={{ color: "#21337A" }}>
+          Relay
+        </span>
+      </div>
 
       {/* Filters */}
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
@@ -297,7 +308,7 @@ export default function LessonPlansPage() {
                   <span
                     className={cn(
                       "px-2 inline-flex text-xs leading-5 font-semibold rounded-full",
-                      plan.status === "Completed" ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800",
+                      plan.status === "Completed" ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"
                     )}
                   >
                     {plan.status}
@@ -307,8 +318,8 @@ export default function LessonPlansPage() {
                   <Button
                     variant="outline"
                     onClick={(e) => {
-                      e.stopPropagation()
-                      handleViewLesson(plan)
+                      e.stopPropagation();
+                      handleViewLesson(plan);
                     }}
                   >
                     View Lesson
@@ -320,6 +331,5 @@ export default function LessonPlansPage() {
         </table>
       </div>
     </div>
-  )
+  );
 }
-

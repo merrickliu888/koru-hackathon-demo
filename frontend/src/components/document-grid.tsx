@@ -58,7 +58,7 @@ export default function DocumentGrid() {
   return (
     <div className="p-6 max-w-7xl mx-auto w-screen">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-semibold">Global Documents</h1>
+        <h1 className="text-2xl font-semibold text-[#21337A]">Global Documents</h1>
         <Tabs defaultValue="date" className="w-[400px]">
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="date">Name</TabsTrigger>

@@ -10,16 +10,17 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { useRouter } from "next/navigation";
 const subjects = [
-  "Mathematics", "Science", "English", "History", "Art", "Music", "Physical Education", "Foreign Languages"
+  "Mathematics",
+  "Science",
+  "English",
+  "History",
+  "Art",
+  "Music",
+  "Physical Education",
+  "Foreign Languages",
 ];
 
 const grades = ["Elementary", "Middle School", "High School"];
@@ -33,27 +34,29 @@ const dummyTeachers = [
 ];
 
 const dummyAbsences = [
-  { 
-    id: 1, 
-    date: "2024-03-20", 
+  {
+    id: 1,
+    date: "2024-03-20",
     supplyTeacher: "John Doe",
-    status: "completed" 
+    status: "completed",
   },
-  { 
-    id: 2, 
-    date: "2024-03-25", 
-    supplyTeacher: "Pending",
-    status: "pending" 
+  {
+    id: 2,
+    date: "2024-03-25",
+    supplyTeacher: "Sam Johnson",
+    status: "pending",
   },
-  { 
-    id: 3, 
-    date: "2024-04-01", 
-    supplyTeacher: "Not assigned",
-    status: "upcoming" 
-  },
-];
+].reverse();
+
+const newAbsence = {
+  id: 3,
+  date: "2024-04-01",
+  supplyTeacher: "Not assigned",
+  status: "upcoming",
+};
 
 export default function TeacherSearchPage() {
+  const router = useRouter();
   const [date, setDate] = useState<Date | undefined>();
   const [teacherName, setTeacherName] = useState("");
   const [selectedSubject, setSelectedSubject] = useState("");
@@ -61,6 +64,7 @@ export default function TeacherSearchPage() {
   const [showOnlyAvailable, setShowOnlyAvailable] = useState(false);
   const [requestedTeachers, setRequestedTeachers] = useState<Set<number>>(new Set());
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showNewAbsence, setShowNewAbsence] = useState(false);
 
   const handleRequest = (teacherId: number) => {
     setRequestedTeachers((prev) => new Set(prev).add(teacherId));
@@ -70,6 +74,7 @@ export default function TeacherSearchPage() {
     if (date) {
       // Handle adding the absence here
       console.log("Adding absence for:", format(date, "yyyy-MM-dd"));
+      setShowNewAbsence(true);
       setIsModalOpen(false);
       setDate(undefined);
     }
@@ -88,27 +93,20 @@ export default function TeacherSearchPage() {
     }
   };
 
-  const filteredTeachers = dummyTeachers.filter((teacher) => {
-    return (
-      teacher.name.toLowerCase().includes(teacherName.toLowerCase()) &&
-      (selectedSubject === "" || teacher.subject === selectedSubject) &&
-      (selectedGrade === "" || teacher.grade === selectedGrade) &&
-      (!showOnlyAvailable || teacher.available)
-    );
-  });
-
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6">Manage Absences</h1>
+      <h1 className="text-2xl font-bold mb-6 text-[#21337A]">Manage Absences</h1>
 
       <div className="mb-6">
         <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
           <DialogTrigger asChild>
-            <Button variant="default">Add an absence</Button>
+            <Button variant="default" className="bg-[#21337A] hover:bg-[#67A0C9]">
+              Add an absence
+            </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
+          <DialogContent className="sm:max-w-[350px] flex flex-col items-center">
             <DialogHeader>
-              <DialogTitle>Select Absence Date</DialogTitle>
+              <DialogTitle className="text-[#21337A]">Select Absence Date</DialogTitle>
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <Calendar
@@ -116,9 +114,12 @@ export default function TeacherSearchPage() {
                 selected={date}
                 onSelect={setDate}
                 className="rounded-md border"
+                classNames={{
+                  day_selected: "bg-[#21337A] text-white rounded-md hover:bg-[#67A0C9]",
+                }}
                 initialFocus
               />
-              <Button onClick={handleAddAbsence} disabled={!date}>
+              <Button onClick={handleAddAbsence} disabled={!date} className="bg-[#21337A] hover:bg-[#67A0C9]">
                 Confirm Absence
               </Button>
             </div>
@@ -137,19 +138,41 @@ export default function TeacherSearchPage() {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
+            {showNewAbsence && (
+              <tr key={newAbsence.id} className="hover:bg-gray-50">
+                <td className="px-6 py-4 whitespace-nowrap text-sm">
+                  {format(new Date(newAbsence.date), "MMMM d, yyyy")}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{newAbsence.supplyTeacher}</td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <span
+                    className={cn(
+                      "px-2 inline-flex text-xs leading-5 font-semibold rounded-full",
+                      getStatusBadgeClass(newAbsence.status)
+                    )}
+                  >
+                    {newAbsence.status.charAt(0).toUpperCase() + newAbsence.status.slice(1)}
+                  </span>
+                </td>
+              </tr>
+            )}
             {dummyAbsences.map((absence) => (
-              <tr key={absence.id} className="hover:bg-gray-50">
+              <tr
+                key={absence.id}
+                className="hover:bg-gray-50"
+                onClick={() => router.push(`/teacher-dashboard/generate-plan`)}
+              >
                 <td className="px-6 py-4 whitespace-nowrap text-sm">
                   {format(new Date(absence.date), "MMMM d, yyyy")}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {absence.supplyTeacher}
-                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{absence.supplyTeacher}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className={cn(
-                    "px-2 inline-flex text-xs leading-5 font-semibold rounded-full",
-                    getStatusBadgeClass(absence.status)
-                  )}>
+                  <span
+                    className={cn(
+                      "px-2 inline-flex text-xs leading-5 font-semibold rounded-full",
+                      getStatusBadgeClass(absence.status)
+                    )}
+                  >
                     {absence.status.charAt(0).toUpperCase() + absence.status.slice(1)}
                   </span>
                 </td>
