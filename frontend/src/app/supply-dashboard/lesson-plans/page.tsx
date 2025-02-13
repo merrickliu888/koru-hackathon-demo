@@ -15,7 +15,7 @@ import Image from "next/image";
 const lessonPlans = [
   {
     id: "1",
-    date: "2025-02-15",
+    date: "2025-03-31",
     school: "Springfield Elementary",
     teacher: "Ms. Lekhi",
     grade: "5th Grade",
@@ -48,7 +48,8 @@ const lessonPlans = [
           checked: false,
         },
       ],
-      morning_routine: "Pick up students from outside the school and bring them inside. Allow them to read for 10 minutes.",
+      morning_routine:
+        "Pick up students from outside the school and bring them inside. Allow them to read for 10 minutes.",
       period_1: "Students will focus on practicing mental math techniques and improving their problem-solving skills.",
       period_2: "Introduction to essay writing, students will learn about structure and outlining.",
       morning_recess: "Students will have a 15-minute break to stretch and relax.",
