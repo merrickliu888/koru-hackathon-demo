@@ -1,5 +1,13 @@
 from pydantic import BaseModel
 
+class ChatMessage(BaseModel):
+    role: str
+    content: str
+
+class ChatRequest(BaseModel):
+    messages: list[ChatMessage]
+    lesson_plan: dict
+
 class ProcessedImage(BaseModel):
     title: str
     description: str
